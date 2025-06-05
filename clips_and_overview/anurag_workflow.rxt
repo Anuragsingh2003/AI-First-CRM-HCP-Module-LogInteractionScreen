@@ -1,0 +1,59 @@
+WORKFLOW: HCP CRM Backend 
+
+1. Startup
+   - FastAPI app is created.
+   - CORS middleware is added to allow frontend (localhost:5173) access.
+   - On startup, `init_db()` is called to initialize the MySQL connection pool and ensure tables exist.
+
+2. Database Layer
+   - All database access is via an async aiomysql connection pool.
+   - Tables: `hcp_profiles` (HCP info), `hcp_interactions` (interaction logs).
+
+3. Tool Functions (LangChain Tools)
+   - All major business logic is wrapped as @tool functions for use in the workflow and endpoints:
+     - `log_interaction`: Insert a new interaction, summarize and classify outcome using Groq LLM.
+     - `edit_interaction`: Update an existing interaction, re-summarize and re-classify.
+     - `delete_interaction`: Delete an interaction by ID.
+     - `validate_or_create_hcp`: Ensure HCP exists (by ID or name), create if not.
+     - `fetch_latest_interaction`: Get the latest interaction for an HCP.
+     - `get_product_info`: (Stub) Return product info.
+     - `classify_outcome`: Classify outcome using Groq LLM.
+     - `extract_entities`: Parse user text to extract structured fields (HCP, type, date, etc).
+
+4. LangGraph Workflow (StateGraph)
+   - `InteractionState` (Pydantic model) holds all form/chat state.
+   - `create_workflow()` builds a LangGraph workflow:
+     - Main node: `process_interaction(state)`
+       - Extracts entities from the latest user message.
+       - Handles commands:
+         - "fetch/retrieve/update": Loads latest interaction, applies updates if needed.
+         - "fill form"/"met": Fills form with extracted data, does not save.
+         - "log interaction"/"save": Creates or updates an interaction in DB.
+         - "edit interaction": Updates an existing interaction.
+         - "delete interaction": Deletes an interaction.
+         - Otherwise: Responds with help message.
+     - The workflow is compiled and used as `graph`.
+
+5. API Endpoints
+   - `/interactions` (POST): Create a new interaction (calls `log_interaction`).
+   - `/interactions/{id}` (PUT): Update an interaction (calls `edit_interaction`).
+   - `/interactions/{id}` (DELETE): Delete an interaction (calls `delete_interaction`).
+   - `/interactions` (GET): List all interactions (returns all from DB).
+   - `/chat` (POST): Accepts a chat message and current form state, runs through the workflow, returns AI response and updated form data.
+
+6. Chat/AI Flow
+   - Frontend sends a chat message and current form data to `/chat`.
+   - Backend builds an `InteractionState` and runs it through the workflow (`graph.ainvoke`).
+   - The workflow uses `extract_entities` to parse the message, then routes to the correct logic (fetch, fill, save, edit, delete).
+   - AI summarization/classification is done via Groq LLM where needed.
+   - The response includes both the AI's reply and the updated form state for the frontend.
+
+7. Data Model
+   - `InteractionState` and `Interaction` Pydantic models ensure all data is validated and structured for both workflow and API responses.
+
+8. Main Entry
+   - If run as a script, starts Uvicorn server on 0.0.0.0:8000.
+
+SUMMARY:
+- All user actions (form or chat) are funneled through the workflow, which uses entity extraction and business logic tools to update/read the database and generate AI responses.
+- The backend is fully async, uses FastAPI for HTTP, aiomysql for DB, and Groq for LLM-powered summarization/classification.
