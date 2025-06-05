@@ -1,7 +1,9 @@
-# Patient Management Backend - AIVOA
+# Management Backend - AIVOA
 
 ## Overview
-The Patient Management Backend is built using FastAPI and serves as the backend for the patient management system. It provides a set of RESTful API endpoints to manage interactions with healthcare professionals (HCPs), including creating, updating, deleting, and fetching interaction records. The backend also handles CORS for the frontend application and initializes a MySQL database connection.
+The Log-Interaction Management Backend is built using FastAPI and serves as the backend for the ai-agent based interaction management system. It provides a set of RESTful API endpoints to manage interactions with healthcare professionals (HCPs), including creating, updating, deleting, and fetching interaction records. The backend also handles CORS for the frontend application and initializes a MySQL database connection.
+
+##Dynamically fill as per prompt agentic - groq Ai
 
 ## Features
 - RESTful API for managing HCP interactions
@@ -12,16 +14,13 @@ The Patient Management Backend is built using FastAPI and serves as the backend 
 ## Setup Instructions
 
 ### Prerequisites
-- Python 3.7 or higher
+- Python 3.10 or higher
 - MySQL server
 - Required Python packages (listed in `requirements.txt`)
 
 ### Installation
 1. Clone the repository:
-   ```
-   git clone https://github.com/yourusername/patient-management.git
-   cd patient-management/backend
-   ```
+ 
 
 2. Create a virtual environment and activate it:
    ```
