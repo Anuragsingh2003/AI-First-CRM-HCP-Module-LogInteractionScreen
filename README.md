@@ -1,4 +1,4 @@
-# Patient Management Backend
+# Patient Management Backend - AIVOA
 
 ## Overview
 The Patient Management Backend is built using FastAPI and serves as the backend for the patient management system. It provides a set of RESTful API endpoints to manage interactions with healthcare professionals (HCPs), including creating, updating, deleting, and fetching interaction records. The backend also handles CORS for the frontend application and initializes a MySQL database connection.
