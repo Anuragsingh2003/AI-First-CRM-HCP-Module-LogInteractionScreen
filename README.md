@@ -62,6 +62,22 @@ The Log-Interaction Management Backend is built using FastAPI and serves as the 
 - **Endpoint:** `GET /interactions`
 - **Description:** Retrieves a list of all interactions.
 
+
+1. POST /chat
+
+- Accepts a chat message and optional form data, processes it through the AI workflow, and returns an AI-generated response plus updated form data.
+- Request body: JSON object with at least a "text" field, and optionally any of the form fields.
+
+
+2. GET /interactions
+
+- Returns a list of all HCP interactions in the database.
+- Response: JSON array of Interaction objects, each with fields:
+  - id, hcp_id, interaction_type, date, time, attendees, topic_discussed,
+    materials_shared, hcp_sentiment, outcomes, follow_up_action, summary, outcome
+
+
+
 ## Usage Examples
 - To create a new interaction, send a POST request to `/interactions` with the required data.
 - To update an interaction, send a PUT request to `/interactions/{interaction_id}` with the updated data.
