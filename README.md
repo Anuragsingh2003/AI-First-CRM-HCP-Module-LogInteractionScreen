@@ -95,7 +95,7 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 
 
-# Patient Management Application
+# frontend part Application
 
 ## Overview
 The Patient Management Application is a comprehensive system designed to facilitate the management of healthcare provider (HCP) interactions. It consists of a backend built with FastAPI and a frontend developed using React. This application allows users to log, edit, delete, and fetch interactions with healthcare providers efficiently.
